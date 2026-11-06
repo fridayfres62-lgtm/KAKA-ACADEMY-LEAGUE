@@ -1,0 +1,20 @@
+{
+  "id": "./",
+  "name": "KAKA Academy League",
+  "short_name": "KAL",
+  "description": "Official KAKA Academy League fixtures, results and standings.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#031c12",
+  "theme_color": "#07552f",
+  "icons": [
+    {
+      "src": "./kal-logo.png",
+      "sizes": "any",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
