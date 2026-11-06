@@ -7,7 +7,11 @@
   <meta name="google-site-verification" content="ZnBX3i1ZMTa0jbu3pZkcwTxN7wv9ZrUpCbd8C4-hls4" />
   <title>KAKA Academy League | Official Website</title>
   <meta name="description" content="Official KAKA Academy League website: fixtures, match results, league standings and academy information in Kasese, Uganda.">
-  <!-- IMPORTANT: Copy your existing Google Search Console verification meta tag here before publishing. -->
+  <link rel="manifest" href="./manifest.json">
+  <link rel="icon" type="image/png" href="./kal-logo.png">
+  <link rel="apple-touch-icon" href="./kal-logo.png">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
   <style>
     :root{--green:#07552f;--deep:#031c12;--gold:#ffd21c;--ink:#14251b;--muted:#66756b;--paper:#f3f7f3}
     *{box-sizing:border-box}
@@ -37,6 +41,9 @@
     .teams{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:10px}
     .team{background:#f1f7f2;border:1px solid #dce9df;border-radius:11px;padding:13px;text-align:center;font-weight:700;color:var(--green)}
     .pill{display:inline-block;background:#fff1b9;color:#473800;padding:5px 9px;border-radius:20px;font-size:12px;font-weight:700}
+    .install-wrap{margin:16px auto 0}
+    .install-btn{display:none;border:0;border-radius:24px;background:var(--gold);color:#18351f;font-weight:800;font-size:15px;padding:12px 20px;cursor:pointer}
+    .install-help{font-size:12px;color:#e1eee5;margin:8px 0 0}
     footer{background:var(--deep);color:#dcebe1;text-align:center;padding:24px 12px;line-height:1.9;margin-top:28px}
     footer strong{color:var(--gold)}
     @media(max-width:480px){.hero{padding-top:20px}.logo{width:min(185px,55vw)}.intro,.panel{padding:14px}nav{gap:5px}nav a{padding:8px 10px}}
@@ -45,10 +52,14 @@
 <body>
 <header class="hero">
   <img class="logo" src="kal-logo.png" alt="KAKA Academy League official crown and shield logo">
-  <span class="pill">OFFICIAL LEAGUE WEBSITE</span>
+  <span class="pill">OFFICIAL LEAGUE WEBSITE & APP</span>
   <h1>KAKA ACADEMY LEAGUE</h1>
   <p class="motto">DISCOVER TALENT. DEVELOP CHAMPIONS.</p>
   <p class="sub">Under-20 Football • Kasese District, Uganda</p>
+  <div class="install-wrap">
+    <button class="install-btn" id="installButton" type="button">Install KAL App</button>
+    <p class="install-help" id="installHelp">On Android, use Chrome menu ⋮ and choose “Install app” or “Add to Home screen” if available.</p>
+  </div>
 </header>
 <nav>
   <a href="#table">League Table</a><a href="#results">Match Results</a><a href="#teams">Academies</a><a href="#about">About KAL</a>
@@ -128,6 +139,38 @@ async function refresh(){
 }
 refresh();
 setInterval(refresh,60000);
+
+// Register the service worker so Chrome can offer installation and cache the app shell.
+if("serviceWorker" in navigator){
+  window.addEventListener("load",()=>{
+    navigator.serviceWorker.register("./sw.js").catch(error=>console.log("KAL app setup:",error));
+  });
+}
+
+// Show a direct install button when Chrome/Android makes the install prompt available.
+let deferredInstallPrompt=null;
+const installButton=document.getElementById("installButton");
+const installHelp=document.getElementById("installHelp");
+window.addEventListener("beforeinstallprompt",event=>{
+  event.preventDefault();
+  deferredInstallPrompt=event;
+  installButton.style.display="inline-block";
+  installHelp.textContent="Install KAL on your phone for quick access.";
+});
+installButton.addEventListener("click",async()=>{
+  if(!deferredInstallPrompt){
+    installHelp.textContent="Open Chrome menu ⋮ and choose Install app or Add to Home screen.";
+    return;
+  }
+  deferredInstallPrompt.prompt();
+  await deferredInstallPrompt.userChoice;
+  deferredInstallPrompt=null;
+  installButton.style.display="none";
+});
+window.addEventListener("appinstalled",()=>{
+  installButton.style.display="none";
+  installHelp.textContent="KAL is installed on this device.";
+});
 </script>
 </body>
 </html>
