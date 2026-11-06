@@ -1,2 +1,0 @@
-# KAKA-ACADEMY-LEAGUE
-Develop 
