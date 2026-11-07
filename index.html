@@ -9,11 +9,9 @@
   OneSignalDeferred.push(async function(OneSignal) {
     await OneSignal.init({
       appId: "3f917596-5939-4cc0-9219-3edeefe01f9e",
-
-      serviceWorkerPath: "/KAKA-ACADEMY-LEAGUE/OneSignalSDKWorker.js",
-
+      serviceWorkerPath: "/KAKA-ACADEMY-LEAGUE/onesignal/OneSignalSDKWorker.js",
       serviceWorkerParam: {
-        scope: "/KAKA-ACADEMY-LEAGUE/"
+        scope: "/KAKA-ACADEMY-LEAGUE/onesignal/"
       }
     });
   });
